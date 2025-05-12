@@ -8,23 +8,23 @@ export default function Form({ isEdit }) {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    charName: "",
-    charSeries: "",
-    charAuth: "",
+    name: "",
+    director: "",
+    plot: "",
   });
 
   const [apiError, setApiError] = useState(null);
 
   const { data, loading, error } = useFetch(
-    `${import.meta.env.VITE_API_URL}/chars/${id}`
+    `${import.meta.env.VITE_API_URL}/movies/${id}`
   );
 
   useEffect(() => {
     if (isEdit && data) {
       setFormData({
-        charName: data?.charName || "",
-        charSeries: data?.charSeries || "",
-        charAuth: data?.charAuth || "",
+        name: data?.name || "",
+        director: data?.director || "",
+        plot: data?.plot || "",
       });
     }
   }, [isEdit, data, id]);
@@ -36,7 +36,7 @@ export default function Form({ isEdit }) {
     try {
       if (isEdit) {
         const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/chars/${id}`,
+          `${import.meta.env.VITE_API_URL}/movies/${id}`,
           {
             method: "PUT",
             headers: {
@@ -53,7 +53,7 @@ export default function Form({ isEdit }) {
           setApiError(errorData.message || "Failed to update startup");
         }
       } else {
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/chars`, {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/movies`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -74,6 +74,7 @@ export default function Form({ isEdit }) {
       setApiError("Network error occurred");
     }
   }
+
   return (
     <>
       {isEdit && loading ? (
@@ -86,7 +87,7 @@ export default function Form({ isEdit }) {
         <div className="card shadow border-0">
           <div className="card-body p-4">
             <h2 className="card-title mb-4">
-              {isEdit ? "Edit Book" : "Add New Book"}
+              {isEdit ? "Edit Movie" : "Add New Movie"}
             </h2>
 
             {(error || apiError) && (
@@ -97,55 +98,53 @@ export default function Form({ isEdit }) {
 
             <form onSubmit={handleSubmit}>
               <div className="mb-4">
-                <label htmlFor="charName" className="form-label">
-                  Char Name
+                <label htmlFor="name" className="form-label">
+                  Movie Name
                 </label>
                 <input
                   type="text"
                   className="form-control"
-                  charName="charName"
-                  id="charName"
-                  placeholder="e.g., Gojo Satoru"
-                  value={formData.charName}
+                  name="name"
+                  id="name"
+                  value={formData.name}
                   onChange={(e) =>
-                    setFormData({ ...formData, charName: e.target.value })
+                    setFormData({ ...formData, name: e.target.value })
                   }
                   required
                 />
               </div>
               <div className="mb-4">
-                <label htmlFor="charSeries" className="form-label">
-                  Char Series
+                <label htmlFor="director" className="form-label">
+                  Movie Director
                 </label>
                 <textarea
                   className="form-control"
-                  charName="charSeries"
-                  id="charSeries"
-                  placeholder="e.g., Jujutsu Kaisen"
-                  value={formData.charSeries}
+                  name="director"
+                  id="director"
+                  value={formData.director}
                   onChange={(e) =>
-                    setFormData({ ...formData, charSeries: e.target.value })
+                    setFormData({ ...formData, director: e.target.value })
                   }
                   rows={8}
                   required
                 ></textarea>
               </div>
               <div className="mb-4">
-                <label htmlFor="charAuth" className="form-label">
-                  Char Auth
+                <label htmlFor="plot" className="form-label">
+                  Movie Plot
                 </label>
-                <input
+                <textarea
                   type="text"
                   className="form-control"
-                  charName="charAuth"
-                  id="charAuth"
-                  placeholder="e.g., Gege"
-                  value={formData.charAuth}
+                  name="plot"
+                  id="plot"
+                  value={formData.plot}
                   onChange={(e) =>
-                    setFormData({ ...formData, charAuth: e.target.value })
+                    setFormData({ ...formData, plot: e.target.value })
                   }
                   required
-                />
+                  rows={8}
+                ></textarea>
               </div>
               <div className="d-flex gap-2">
                 <Link
